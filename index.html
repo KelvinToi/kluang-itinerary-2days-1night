@@ -6,290 +6,431 @@
   <title>居銮 2天1夜 · 美食与慢旅行</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f0f5f0;
-      --card: rgba(255, 255, 255, 0.93);
-      --ink: #24352a;
-      --muted: #5a6b5e;
-      --accent: #3d7a4f;
-      --accent-soft: #e4f0e7;
-      --green: #2f6b42;
-      --deep-green: #1e4d32;
-      --line: #d8e5db;
-      --shadow: 0 12px 36px rgba(30, 77, 50, 0.09);
+      --bg: #eef4ef;
+      --card: rgba(255, 255, 255, 0.82);
+      --ink: #1f3326;
+      --muted: #5c6f62;
+      --accent: #3a7a4e;
+      --accent-soft: #dceee2;
+      --green: #2c6840;
+      --deep: #1a4029;
+      --line: rgba(58, 122, 78, 0.18);
+      --shadow: 0 20px 50px -12px rgba(26, 64, 41, 0.14);
+      --radius: 22px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Noto Sans SC', system-ui, sans-serif;
       background: var(--bg);
       color: var(--ink);
-      line-height: 1.7;
+      line-height: 1.75;
       -webkit-font-smoothing: antialiased;
       background-image:
-        linear-gradient(180deg, rgba(240,245,240,0.90) 0%, rgba(240,245,240,0.94) 45%, rgba(240,245,240,0.97) 100%),
+        radial-gradient(ellipse 120% 80% at 50% -20%, rgba(58,122,78,0.12), transparent 55%),
+        linear-gradient(180deg, rgba(238,244,239,0.88) 0%, rgba(238,244,239,0.94) 40%, rgba(238,244,239,0.97) 100%),
         url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1920&q=80');
       background-size: cover;
       background-attachment: fixed;
-      background-position: center;
+      background-position: center top;
+      min-height: 100vh;
     }
 
+    /* ——— Music Player ——— */
     .music-bar {
       position: fixed;
-      bottom: 1.2rem;
-      right: 1.2rem;
-      z-index: 100;
-      background: rgba(30, 77, 50, 0.90);
-      color: #f0f5f0;
+      bottom: 1.4rem;
+      right: 1.4rem;
+      z-index: 200;
+      background: rgba(26, 64, 41, 0.88);
+      color: #f0f7f2;
       border-radius: 999px;
-      padding: 0.55rem 1.05rem;
+      padding: 0.65rem 1.15rem 0.65rem 0.9rem;
       display: flex;
       align-items: center;
-      gap: 0.55rem;
-      font-size: 0.82rem;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-      backdrop-filter: blur(8px);
+      gap: 0.65rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.02em;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.22);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
+    .music-bar:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(0,0,0,0.28); }
     .music-bar button {
-      background: none;
+      background: rgba(255,255,255,0.12);
       border: none;
       color: inherit;
       cursor: pointer;
-      font-size: 1rem;
-      line-height: 1;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 0.75rem;
+      transition: background 0.2s;
     }
+    .music-bar button:hover { background: rgba(255,255,255,0.22); }
 
+    /* ——— Hero ——— */
     .hero {
-      background: linear-gradient(165deg, rgba(30,77,50,0.93) 0%, rgba(45,90,60,0.90) 45%, rgba(55,100,70,0.88) 100%);
-      color: #f0f5f0;
-      padding: 4.2rem 1.5rem 5.2rem;
-      text-align: center;
       position: relative;
+      padding: 5.5rem 1.5rem 6.5rem;
+      text-align: center;
       overflow: hidden;
+      color: #f4faf6;
     }
     .hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1600&q=70') center/cover;
-      opacity: 0.18;
-      pointer-events: none;
+      background:
+        linear-gradient(165deg, rgba(26,64,41,0.94) 0%, rgba(35,85,52,0.90) 45%, rgba(45,100,62,0.88) 100%),
+        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1600&q=70') center/cover;
+      z-index: 0;
     }
-    .hero-inner { position: relative; max-width: 720px; margin: 0 auto; }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0; right: 0;
+      height: 80px;
+      background: linear-gradient(to top, var(--bg), transparent);
+      z-index: 1;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 680px;
+      margin: 0 auto;
+    }
     .eyebrow {
-      display: inline-block;
-      font-size: 0.78rem;
-      letter-spacing: 0.18em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
       opacity: 0.85;
-      margin-bottom: 1rem;
+      margin-bottom: 1.25rem;
       font-weight: 500;
+      padding: 0.35rem 0.9rem;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
     }
     .hero h1 {
-      font-family: 'Playfair Display', 'Noto Sans SC', serif;
-      font-size: clamp(2rem, 5.8vw, 3rem);
+      font-family: 'Cormorant Garamond', 'Noto Sans SC', serif;
+      font-size: clamp(2.4rem, 6.5vw, 3.6rem);
       font-weight: 600;
-      line-height: 1.25;
-      margin-bottom: 0.7rem;
+      line-height: 1.2;
+      margin-bottom: 0.9rem;
+      letter-spacing: -0.01em;
     }
-    .hero p {
-      font-size: 1.02rem;
-      opacity: 0.92;
-      max-width: 480px;
-      margin: 0 auto 1.6rem;
+    .hero .subtitle {
+      font-size: 1.05rem;
+      opacity: 0.9;
       font-weight: 300;
+      max-width: 420px;
+      margin: 0 auto 1.8rem;
     }
     .meta {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 0.5rem 1.3rem;
-      font-size: 0.88rem;
-      opacity: 0.93;
+      gap: 0.6rem;
+    }
+    .meta span {
+      font-size: 0.82rem;
+      background: rgba(255,255,255,0.12);
+      padding: 0.4rem 0.95rem;
+      border-radius: 999px;
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
+    /* ——— Layout ——— */
     .container {
-      max-width: 760px;
+      max-width: 720px;
       margin: 0 auto;
-      padding: 0 1.2rem 4.5rem;
+      padding: 0 1.25rem 5rem;
+      position: relative;
     }
 
+    /* ——— Intro Card ——— */
     .intro-card {
       background: var(--card);
-      border-radius: 20px;
-      padding: 1.7rem 1.5rem;
-      margin-top: -2.6rem;
+      border-radius: var(--radius);
+      padding: 1.85rem 1.6rem;
+      margin-top: -3.2rem;
       box-shadow: var(--shadow);
       position: relative;
-      z-index: 2;
-      border: 1px solid rgba(255,255,255,0.75);
-      backdrop-filter: blur(6px);
+      z-index: 5;
+      border: 1px solid rgba(255,255,255,0.7);
+      backdrop-filter: blur(20px);
     }
-    .intro-card p { color: var(--muted); font-size: 0.97rem; }
-    .intro-card strong { color: var(--ink); font-weight: 500; }
+    .intro-card p {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+    .intro-card strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
 
-    .day-header {
+    /* ——— Day Navigation (sticky) ——— */
+    .day-nav {
+      position: sticky;
+      top: 0.8rem;
+      z-index: 50;
       display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin: 3rem 0 1.4rem;
+      gap: 0.5rem;
+      margin: 2.2rem 0 1.2rem;
+      padding: 0.4rem;
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(16px);
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 24px rgba(26,64,41,0.08);
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
     }
-    .day-badge {
+    .day-nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 0.5rem 1.15rem;
+      border-radius: 999px;
+      transition: all 0.25s ease;
+    }
+    .day-nav a:hover,
+    .day-nav a.active {
       background: var(--accent);
       color: white;
-      font-size: 0.76rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      padding: 0.42rem 0.85rem;
-      border-radius: 999px;
-      white-space: nowrap;
-    }
-    .day-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--deep-green);
     }
 
+    /* ——— Day Header ——— */
+    .day-header {
+      margin: 2.8rem 0 1.5rem;
+      text-align: center;
+    }
+    .day-badge {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: var(--green);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 0.6rem;
+    }
+    .day-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--deep);
+      letter-spacing: -0.01em;
+    }
+
+    /* ——— Timeline ——— */
     .timeline {
       position: relative;
-      padding-left: 1.55rem;
+      padding-left: 1.7rem;
     }
     .timeline::before {
       content: '';
       position: absolute;
-      left: 0.32rem;
-      top: 0.35rem;
-      bottom: 0.35rem;
+      left: 0.38rem;
+      top: 0.6rem;
+      bottom: 0.6rem;
       width: 2px;
-      background: linear-gradient(to bottom, var(--accent), var(--line));
+      background: linear-gradient(to bottom, var(--accent), transparent 95%);
       border-radius: 2px;
+      opacity: 0.5;
     }
 
-    .stop { position: relative; margin-bottom: 1.65rem; }
-    .stop:last-child { margin-bottom: 0; }
+    .stop {
+      position: relative;
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: fadeUp 0.55s ease forwards;
+    }
+    .stop:nth-child(1) { animation-delay: 0.05s; }
+    .stop:nth-child(2) { animation-delay: 0.12s; }
+    .stop:nth-child(3) { animation-delay: 0.19s; }
+    .stop:nth-child(4) { animation-delay: 0.26s; }
+    .stop:nth-child(5) { animation-delay: 0.33s; }
+    .stop:nth-child(6) { animation-delay: 0.40s; }
+    .stop:nth-child(7) { animation-delay: 0.47s; }
+    .stop:nth-child(8) { animation-delay: 0.54s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .stop::before {
       content: '';
       position: absolute;
-      left: -1.45rem;
-      top: 0.55rem;
-      width: 11px;
-      height: 11px;
+      left: -1.58rem;
+      top: 1.35rem;
+      width: 12px;
+      height: 12px;
       background: #fff;
       border: 3px solid var(--accent);
       border-radius: 50%;
-      z-index: 1;
+      z-index: 2;
+      box-shadow: 0 0 0 4px rgba(58,122,78,0.12);
     }
 
     .stop-card {
       background: var(--card);
-      border-radius: 16px;
-      padding: 1.3rem 1.3rem 1.2rem;
-      box-shadow: 0 6px 22px rgba(30,77,50,0.07);
-      border: 1px solid var(--line);
-      backdrop-filter: blur(4px);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border-radius: 18px;
+      padding: 1.35rem 1.35rem 1.25rem;
+      box-shadow: 0 8px 28px rgba(26,64,41,0.07);
+      border: 1px solid rgba(255,255,255,0.65);
+      backdrop-filter: blur(12px);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.3s ease;
     }
     .stop-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(30,77,50,0.12);
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(26,64,41,0.13);
     }
 
     .time {
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 600;
       color: var(--accent);
       letter-spacing: 0.04em;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
     }
+    .time::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0.7;
+    }
+
     .stop-card h3 {
-      font-size: 1.1rem;
+      font-size: 1.12rem;
       font-weight: 600;
-      margin-bottom: 0.4rem;
-      color: var(--deep-green);
+      margin-bottom: 0.45rem;
+      color: var(--deep);
+      letter-spacing: -0.01em;
     }
     .stop-card p {
       font-size: 0.93rem;
       color: var(--muted);
-      margin-bottom: 0.55rem;
+      margin-bottom: 0.7rem;
     }
 
-    .tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
     .tag {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       background: var(--accent-soft);
       color: var(--green);
-      padding: 0.2rem 0.6rem;
+      padding: 0.22rem 0.7rem;
       border-radius: 999px;
       font-weight: 500;
+      letter-spacing: 0.01em;
     }
-    .tag.muted { background: #e8eee9; color: var(--muted); }
-
-    .note {
-      background: rgba(255,255,255,0.78);
-      border-left: 3px solid var(--accent);
-      padding: 0.9rem 1.1rem;
-      border-radius: 0 12px 12px 0;
-      font-size: 0.9rem;
+    .tag.muted {
+      background: rgba(92,111,98,0.1);
       color: var(--muted);
-      margin: 1.5rem 0;
-      backdrop-filter: blur(4px);
     }
 
+    /* ——— Note ——— */
+    .note {
+      background: linear-gradient(135deg, rgba(220,238,226,0.7), rgba(255,255,255,0.6));
+      border: 1px solid rgba(58,122,78,0.15);
+      padding: 1.1rem 1.3rem;
+      border-radius: 16px;
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin: 1.8rem 0;
+      backdrop-filter: blur(8px);
+    }
+    .note strong { color: var(--deep); }
+
+    /* ——— Tips ——— */
     .tips {
-      margin-top: 3.2rem;
+      margin-top: 3.5rem;
       background: var(--card);
-      border-radius: 20px;
-      padding: 1.7rem 1.5rem;
+      border-radius: var(--radius);
+      padding: 2rem 1.7rem;
       box-shadow: var(--shadow);
-      border: 1px solid var(--line);
-      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.7);
+      backdrop-filter: blur(16px);
     }
     .tips h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.3rem;
-      margin-bottom: 0.95rem;
-      color: var(--deep-green);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.55rem;
+      margin-bottom: 1.15rem;
+      color: var(--deep);
+      text-align: center;
     }
     .tips ul { list-style: none; }
     .tips li {
       position: relative;
-      padding-left: 1.25rem;
-      margin-bottom: 0.65rem;
+      padding: 0.55rem 0 0.55rem 1.5rem;
       font-size: 0.93rem;
       color: var(--muted);
+      border-bottom: 1px solid rgba(58,122,78,0.08);
     }
+    .tips li:last-child { border-bottom: none; }
     .tips li::before {
-      content: '·';
+      content: '';
       position: absolute;
-      left: 0.25rem;
-      color: var(--accent);
-      font-weight: 700;
-      font-size: 1.2rem;
-      line-height: 1.1;
+      left: 0.15rem;
+      top: 1.05rem;
+      width: 7px;
+      height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0.7;
     }
 
+    /* ——— Footer ——— */
     .footer {
       text-align: center;
-      padding: 2.2rem 1.5rem 3.5rem;
-      font-size: 0.84rem;
+      padding: 2.5rem 1.5rem 4.5rem;
+      font-size: 0.85rem;
       color: var(--muted);
     }
+    .footer p + p { margin-top: 0.3rem; opacity: 0.8; }
 
-    @media (max-width: 520px) {
-      .hero { padding: 3.3rem 1.15rem 4rem; }
-      .intro-card { padding: 1.35rem 1.15rem; }
-      .day-header { flex-direction: column; align-items: flex-start; gap: 0.45rem; }
-      .music-bar { bottom: 0.9rem; right: 0.9rem; font-size: 0.78rem; }
+    /* ——— Responsive ——— */
+    @media (max-width: 540px) {
+      .hero { padding: 4.2rem 1.2rem 5.2rem; }
+      .intro-card { padding: 1.5rem 1.25rem; margin-top: -2.6rem; }
+      .day-nav { margin-top: 1.8rem; }
+      .music-bar { bottom: 1rem; right: 1rem; font-size: 0.75rem; }
+      .stop-card { padding: 1.2rem; }
     }
   </style>
 </head>
 <body>
   <div class="music-bar">
-    <button id="musicToggle" aria-label="播放/暂停背景音乐">❚❚</button>
+    <button id="musicToggle" aria-label="播放/暂停">❚❚</button>
     <span>Chill Ambient</span>
   </div>
   <audio id="bgMusic" loop autoplay>
@@ -300,7 +441,7 @@
     <div class="hero-inner">
       <div class="eyebrow">Johor · Kluang · Slow Weekend</div>
       <h1>居銮 2天1夜<br>美食与慢旅行</h1>
-      <p>8月23日（日）– 24日（一）<br>从 Pontian · Sin Li Motor 出发 · 约中午抵达</p>
+      <p class="subtitle">8月23日（日）– 24日（一）<br>从 Pontian · Sin Li Motor 出发</p>
       <div class="meta">
         <span>🚗 自驾</span>
         <span>🏨 Bonbon Hotel</span>
@@ -319,166 +460,175 @@
       </p>
     </div>
 
+    <nav class="day-nav">
+      <a href="#day1" class="active">Day 1 · 周日</a>
+      <a href="#day2">Day 2 · 周一</a>
+    </nav>
+
     <!-- DAY 1 -->
-    <div class="day-header">
-      <span class="day-badge">DAY 1 · 8月23日 星期日</span>
-      <h2 class="day-title">抵达 · 美食 · 傍晚山脚 · 夜散步</h2>
-    </div>
-
-    <div class="timeline">
-      <div class="stop">
-        <div class="stop-card">
-          <div class="time">早上出发 · ≈ 12:00 抵达居銮</div>
-          <h3>从 Sin Li Motor Enterprise（Pontian）出发</h3>
-          <p>从Pontian开车前往居銮，约1.5–2小时（视交通而定）。建议中午左右抵达，先找地方停车，开始慢慢吃。</p>
-          <div class="tags"><span class="tag muted">自驾 · Pontian出发</span></div>
-        </div>
+    <section id="day1">
+      <div class="day-header">
+        <div class="day-badge">DAY 1 · 8月23日 星期日</div>
+        <h2 class="day-title">抵达 · 美食 · 傍晚山脚 · 夜散步</h2>
       </div>
 
-      <div class="stop">
-        <div class="stop-card">
-          <div class="time">12:15 – 13:30</div>
-          <h3>Botak Curry Noodle（摩达咖喱面）</h3>
-          <p>居銮必吃。浓郁咖喱面，配料丰富（有猪肉，非清真）。中午时段刚好，建议直接去。</p>
-          <div class="tags">
-            <span class="tag">必吃</span>
-            <span class="tag muted">非清真</span>
+      <div class="timeline">
+        <div class="stop">
+          <div class="stop-card">
+            <div class="time">早上出发 · ≈ 12:00 抵达居銮</div>
+            <h3>从 Sin Li Motor Enterprise（Pontian）出发</h3>
+            <p>从Pontian开车前往居銮，约1.5–2小时（视交通而定）。建议中午左右抵达，先找地方停车，开始慢慢吃。</p>
+            <div class="tags"><span class="tag muted">自驾 · Pontian出发</span></div>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-card">
+            <div class="time">12:15 – 13:30</div>
+            <h3>Botak Curry Noodle（摩达咖喱面）</h3>
+            <p>居銮必吃。浓郁咖喱面，配料丰富（有猪肉，非清真）。中午时段刚好，建议直接去。</p>
+            <div class="tags">
+              <span class="tag">必吃</span>
+              <span class="tag muted">非清真</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-card">
+            <div class="time">13:45 – 14:45</div>
+            <h3>壁画街打卡 · Laman Kreatif & Laman Pesona</h3>
+            <p>靠近旧火车站的创意巷，禁止车辆、壁画丰富。下午光线不错，适合慢慢拍、走走，感受老城氛围。</p>
+            <div class="tags">
+              <span class="tag">打卡</span>
+              <span class="tag">老城街景</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-card">
+            <div class="time">15:00 – 15:40</div>
+            <h3>Check-in Bonbon Hotel + 稍作休息</h3>
+            <p>Jalan Lambak 设计师精品酒店，位置极佳。放好行李后准备去山脚。</p>
+            <div class="tags"><span class="tag">住宿</span></div>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-card">
+            <div class="time">16:00 – 18:15（接近傍晚）</div>
+            <h3>Gunung Lambak 山下 · Hill & Heal + Monkey Cafe</h3>
+            <p>
+              特意安排接近傍晚：温度更舒服、光线柔和，适合「jalan jalan walk walk see see feel feel」。
+              <strong>Hill & Heal</strong>（玻璃屋）与 <strong>Monkey Cafe</strong> 都在山脚，周末营业。慢慢坐、喝杯东西、感受绿意。
+            </p>
+            <div class="tags">
+              <span class="tag">自然 · 傍晚</span>
+              <span class="tag">咖啡馆</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-card">
+            <div class="time">18:40 – 20:00</div>
+            <h3>阿福沙爹 或 Kiri Kanan Nyonya</h3>
+            <p>
+              <strong>阿福沙爹</strong>（经典中式沙爹，有猪肉选项）—— 傍晚开始营业。<br>
+              或 <strong>Kiri Kanan Nyonya</strong>（已开在居銮 Lotus 附近）—— 娘惹风味，适合换口味。
+            </p>
+            <div class="tags">
+              <span class="tag">晚餐</span>
+              <span class="tag">娘惹 / 沙爹</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-card">
+            <div class="time">20:15 – 21:15</div>
+            <h3>大钟楼 · Taman Tasik MPK 散步</h3>
+            <p>市政湖园里的大钟楼，晚间灯光柔和。慢慢走一圈，透气、看湖，很适合消化晚餐后的轻松时光。</p>
+            <div class="tags">
+              <span class="tag">夜景</span>
+              <span class="tag">散步</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-card">
+            <div class="time">21:30 起（可选）</div>
+            <h3>Fendy Burger（Ramlee风格）</h3>
+            <p>靠近巴士总站一带，傍晚开到深夜。双蛋黄、酱料多。如果还饿就当宵夜。</p>
+            <div class="tags"><span class="tag muted">宵夜</span></div>
           </div>
         </div>
       </div>
 
-      <div class="stop">
-        <div class="stop-card">
-          <div class="time">13:45 – 14:45</div>
-          <h3>壁画街打卡 · Laman Kreatif & Laman Pesona</h3>
-          <p>靠近旧火车站的创意巷，禁止车辆、壁画丰富。下午光线不错，适合慢慢拍、走走，感受老城氛围。</p>
-          <div class="tags">
-            <span class="tag">打卡</span>
-            <span class="tag">老城街景</span>
-          </div>
-        </div>
+      <div class="note">
+        Day 1 重点：中午到 → Botak → 壁画街 → 酒店 → <strong>傍晚山脚</strong>（更舒服）→ 晚餐（沙爹或Kiri Kanan）→ 湖边散步。节奏很慢，感受居銮绿意。
       </div>
-
-      <div class="stop">
-        <div class="stop-card">
-          <div class="time">15:00 – 15:40</div>
-          <h3>Check-in Bonbon Hotel + 稍作休息</h3>
-          <p>Jalan Lambak 设计师精品酒店，位置极佳。放好行李后准备去山脚。</p>
-          <div class="tags"><span class="tag">住宿</span></div>
-        </div>
-      </div>
-
-      <div class="stop">
-        <div class="stop-card">
-          <div class="time">16:00 – 18:15（接近傍晚）</div>
-          <h3>Gunung Lambak 山下 · Hill & Heal + Monkey Cafe</h3>
-          <p>
-            特意安排接近傍晚：温度更舒服、光线柔和，适合「jalan jalan walk walk see see feel feel」。
-            <strong>Hill & Heal</strong>（玻璃屋）与 <strong>Monkey Cafe</strong> 都在山脚，周末营业。慢慢坐、喝杯东西、感受绿意。
-          </p>
-          <div class="tags">
-            <span class="tag">自然 · 傍晚</span>
-            <span class="tag">咖啡馆</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="stop">
-        <div class="stop-card">
-          <div class="time">18:40 – 20:00</div>
-          <h3>阿福沙爹 或 Kiri Kanan Nyonya</h3>
-          <p>
-            <strong>阿福沙爹</strong>（经典中式沙爹，有猪肉选项）—— 傍晚开始营业。<br>
-            或 <strong>Kiri Kanan Nyonya</strong>（已开在居銮 Lotus 附近）—— 娘惹风味，适合换口味。
-          </p>
-          <div class="tags">
-            <span class="tag">晚餐</span>
-            <span class="tag">娘惹 / 沙爹</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="stop">
-        <div class="stop-card">
-          <div class="time">20:15 – 21:15</div>
-          <h3>大钟楼 · Taman Tasik MPK 散步</h3>
-          <p>市政湖园里的大钟楼，晚间灯光柔和。慢慢走一圈，透气、看湖，很适合消化晚餐后的轻松时光。</p>
-          <div class="tags">
-            <span class="tag">夜景</span>
-            <span class="tag">散步</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="stop">
-        <div class="stop-card">
-          <div class="time">21:30 起（可选）</div>
-          <h3>Fendy Burger（Ramlee风格）</h3>
-          <p>靠近巴士总站一带，傍晚开到深夜。双蛋黄、酱料多。如果还饿就当宵夜。</p>
-          <div class="tags"><span class="tag muted">宵夜</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="note">
-      Day 1 重点：中午到 → Botak → 壁画街 → 酒店 → <strong>傍晚山脚</strong>（更舒服）→ 晚餐（沙爹或Kiri Kanan）→ 湖边散步。节奏很慢，感受居銮绿意。
-    </div>
+    </section>
 
     <!-- DAY 2 -->
-    <div class="day-header">
-      <span class="day-badge">DAY 2 · 8月24日 星期一</span>
-      <h2 class="day-title">慢早晨 · 咖啡馆 · 紫銮阁 · 回程</h2>
-    </div>
+    <section id="day2">
+      <div class="day-header">
+        <div class="day-badge">DAY 2 · 8月24日 星期一</div>
+        <h2 class="day-title">慢早晨 · 咖啡馆 · 紫銮阁 · 回程</h2>
+      </div>
 
-    <div class="timeline">
-      <div class="stop">
-        <div class="stop-card">
-          <div class="time">08:30 – 10:00</div>
-          <h3>早餐 · 火车站咖啡 / Hailam / Flock</h3>
-          <p>
-            <strong>火车站咖啡</strong> 经典咖椰吐司，或 <strong>Hailam Toast 1935</strong>。<br>
-            也可以去 <strong>Flock</strong>（靠近 Hailam 和紫銮阁附近），坐一下特色cafe。
-          </p>
-          <div class="tags">
-            <span class="tag">早餐</span>
-            <span class="tag">咖啡馆</span>
+      <div class="timeline">
+        <div class="stop">
+          <div class="stop-card">
+            <div class="time">08:30 – 10:00</div>
+            <h3>早餐 · 火车站咖啡 / Hailam / Flock</h3>
+            <p>
+              <strong>火车站咖啡</strong> 经典咖椰吐司，或 <strong>Hailam Toast 1935</strong>。<br>
+              也可以去 <strong>Flock</strong>（靠近 Hailam 和紫銮阁附近），坐一下特色cafe。
+            </p>
+            <div class="tags">
+              <span class="tag">早餐</span>
+              <span class="tag">咖啡馆</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-card">
+            <div class="time">10:15 – 11:15</div>
+            <h3>紫銮阁（德教会 Che Luan Khor）</h3>
+            <p>Jalan Lambak 附近，庭园漂亮安静。有亭子、小桥流水、盆景，适合慢慢走、拍照。30–60分钟足够。Flock 就在这附近，可以顺路。</p>
+            <div class="tags">
+              <span class="tag">安静</span>
+              <span class="tag">文化</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-card">
+            <div class="time">11:30 – 12:30</div>
+            <h3>可选再坐 · Kluang Days 或 Kiri Kanan</h3>
+            <p>
+              如果还想多坐一会：市区 <strong>Kluang Days</strong>（Jalan Lambak 复古舒适），
+              或再去 Lotus 附近的 <strong>Kiri Kanan Nyonya</strong> 吃点轻食。
+            </p>
+            <div class="tags"><span class="tag">咖啡馆</span></div>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-card">
+            <div class="time">13:00 后</div>
+            <h3>简单午餐 + 回程 Pontian</h3>
+            <p>看心情解决后，建议下午2点左右出发回 Pontian（Sin Li Motor Enterprise 方向），避开太晚车潮。</p>
+            <div class="tags"><span class="tag muted">回程</span></div>
           </div>
         </div>
       </div>
-
-      <div class="stop">
-        <div class="stop-card">
-          <div class="time">10:15 – 11:15</div>
-          <h3>紫銮阁（德教会 Che Luan Khor）</h3>
-          <p>Jalan Lambak 附近，庭园漂亮安静。有亭子、小桥流水、盆景，适合慢慢走、拍照。30–60分钟足够。Flock 就在这附近，可以顺路。</p>
-          <div class="tags">
-            <span class="tag">安静</span>
-            <span class="tag">文化</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="stop">
-        <div class="stop-card">
-          <div class="time">11:30 – 12:30</div>
-          <h3>可选再坐 · Kluang Days 或 Kiri Kanan</h3>
-          <p>
-            如果还想多坐一会：市区 <strong>Kluang Days</strong>（Jalan Lambak 复古舒适），
-            或再去 Lotus 附近的 <strong>Kiri Kanan Nyonya</strong> 吃点轻食。
-          </p>
-          <div class="tags"><span class="tag">咖啡馆</span></div>
-        </div>
-      </div>
-
-      <div class="stop">
-        <div class="stop-card">
-          <div class="time">13:00 后</div>
-          <h3>简单午餐 + 回程 Pontian</h3>
-          <p>看心情解决后，建议下午2点左右出发回 Pontian（Sin Li Motor Enterprise 方向），避开太晚车潮。</p>
-          <div class="tags"><span class="tag muted">回程</span></div>
-        </div>
-      </div>
-    </div>
+    </section>
 
     <div class="tips">
       <h2>实用小贴士</h2>
@@ -498,7 +648,7 @@
 
   <footer class="footer">
     <p>居銮 2天1夜 · 美食与慢旅行 · 8月23日（日）– 24日（一）</p>
-    <p style="margin-top:0.35rem;">从 Pontian 出发 · 慢慢吃、慢慢走、感受绿意 🌿</p>
+    <p>从 Pontian 出发 · 慢慢吃、慢慢走、感受绿意 🌿</p>
   </footer>
 
   <script>
@@ -506,9 +656,7 @@
     const btn = document.getElementById('musicToggle');
     let playing = true;
 
-    // try autoplay
     audio.play().catch(() => {
-      // browsers often block autoplay with sound, keep button ready
       playing = false;
       btn.textContent = '▶';
     });
@@ -522,6 +670,22 @@
         btn.textContent = '❚❚';
       }
       playing = !playing;
+    });
+
+    // Day nav active state
+    const navLinks = document.querySelectorAll('.day-nav a');
+    const sections = document.querySelectorAll('section[id]');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 120;
+        if (scrollY >= sectionTop) current = section.getAttribute('id');
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+      });
     });
   </script>
 </body>

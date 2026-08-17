@@ -9,16 +9,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #eef4ef;
-      --card: rgba(255, 255, 255, 0.82);
+      --bg: #e8f0e9;
+      --card: rgba(255, 255, 255, 0.78);
       --ink: #1f3326;
-      --muted: #5c6f62;
+      --muted: #5a6f60;
       --accent: #3a7a4e;
-      --accent-soft: #dceee2;
+      --accent-soft: #d4ead9;
       --green: #2c6840;
       --deep: #1a4029;
       --line: rgba(58, 122, 78, 0.18);
-      --shadow: 0 20px 50px -12px rgba(26, 64, 41, 0.14);
+      --shadow: 0 20px 50px -12px rgba(26, 64, 41, 0.12);
       --radius: 22px;
     }
 
@@ -32,8 +32,7 @@
       line-height: 1.75;
       -webkit-font-smoothing: antialiased;
       background-image:
-        radial-gradient(ellipse 120% 80% at 50% -20%, rgba(58,122,78,0.12), transparent 55%),
-        linear-gradient(180deg, rgba(238,244,239,0.88) 0%, rgba(238,244,239,0.94) 40%, rgba(238,244,239,0.97) 100%),
+        linear-gradient(180deg, rgba(232,240,233,0.72) 0%, rgba(232,240,233,0.78) 35%, rgba(232,240,233,0.85) 100%),
         url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1920&q=80');
       background-size: cover;
       background-attachment: fixed;
@@ -41,140 +40,154 @@
       min-height: 100vh;
     }
 
-    /* ——— Vinyl Music Player (3D) ——— */
-    .music-player {
+    /* ——— Music Player + Visualizer ——— */
+    .music-dock {
       position: fixed;
-      bottom: 1.5rem;
-      right: 1.5rem;
+      bottom: 1.4rem;
+      right: 1.4rem;
       z-index: 200;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.55rem;
+    }
+
+    .visualizer {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 3px;
+      height: 28px;
+      padding: 0 4px;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+    }
+    .visualizer.active { opacity: 1; }
+    .visualizer span {
+      width: 3px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: height 0.05s linear;
+      box-shadow: 0 0 6px rgba(76, 175, 110, 0.5);
+    }
+
+    .music-player {
       display: flex;
       align-items: center;
       gap: 0.9rem;
-      background: rgba(26, 64, 41, 0.92);
-      color: #f0f7f2;
+      background: rgba(26, 64, 41, 0.90);
+      color: #f4faf6;
       border-radius: 999px;
       padding: 0.55rem 1.25rem 0.55rem 0.55rem;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.3);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.28);
       backdrop-filter: blur(18px);
       border: 1px solid rgba(255,255,255,0.12);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
       user-select: none;
-      perspective: 600px;
     }
     .music-player:hover {
       transform: translateY(-3px);
-      box-shadow: 0 18px 48px rgba(0,0,0,0.35);
+      box-shadow: 0 18px 48px rgba(0,0,0,0.32);
+    }
+    .music-player.playing {
+      border-color: rgba(255,255,255,0.2);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.28), 0 0 20px rgba(58,122,78,0.2);
     }
 
     .vinyl-wrap {
-      width: 52px;
-      height: 52px;
+      width: 56px;
+      height: 56px;
       position: relative;
       flex-shrink: 0;
-      transform-style: preserve-3d;
+      perspective: 500px;
     }
 
     .vinyl {
-      width: 52px;
-      height: 52px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       position: relative;
       transform-style: preserve-3d;
       background:
-        /* outer rim */
-        radial-gradient(circle at 50% 50%,
-          transparent 0%,
-          transparent 46%,
-          rgba(255,255,255,0.04) 47%,
-          transparent 48%,
-          transparent 100%
-        ),
-        /* grooves */
         repeating-radial-gradient(
           circle at 50% 50%,
-          #0a0a0a 0px,
-          #0a0a0a 1.2px,
-          #161616 1.2px,
-          #161616 2.4px
+          #050505 0px,
+          #050505 1.1px,
+          #141414 1.1px,
+          #141414 2.3px
         );
       box-shadow:
-        inset 0 0 0 1.5px rgba(255,255,255,0.07),
-        inset 0 0 12px rgba(0,0,0,0.6),
-        0 0 0 2px #0d0d0d,
-        0 6px 16px rgba(0,0,0,0.45);
+        inset 0 0 0 1.5px rgba(255,255,255,0.08),
+        inset 0 0 14px rgba(0,0,0,0.7),
+        0 0 0 2.5px #0a0a0a,
+        0 8px 20px rgba(0,0,0,0.55);
     }
 
-    /* center label */
     .vinyl::before {
       content: '';
       position: absolute;
-      inset: 29%;
+      inset: 28%;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 35% 30%, rgba(255,255,255,0.25), transparent 50%),
-        linear-gradient(145deg, #d4a84b 0%, #b8860b 40%, #8b6914 100%);
-      box-shadow:
-        inset 0 1px 2px rgba(255,255,255,0.4),
-        0 0 0 1px rgba(0,0,0,0.3);
+        radial-gradient(circle at 32% 28%, rgba(255,255,255,0.3), transparent 45%),
+        linear-gradient(145deg, #e0b84a 0%, #c9961a 45%, #8a6a10 100%);
+      box-shadow: inset 0 1px 3px rgba(255,255,255,0.45), 0 0 0 1px rgba(0,0,0,0.4);
       z-index: 2;
     }
 
-    /* spindle hole */
     .vinyl::after {
       content: '';
       position: absolute;
-      inset: 43%;
+      inset: 42%;
       border-radius: 50%;
-      background: #0a0a0a;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.8);
+      background: #050505;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.9);
       z-index: 3;
     }
 
-    /* highlight shine */
     .vinyl-shine {
       position: absolute;
       inset: 0;
       border-radius: 50%;
       background: linear-gradient(
         125deg,
-        rgba(255,255,255,0.18) 0%,
-        transparent 28%,
-        transparent 55%,
-        rgba(255,255,255,0.06) 100%
+        rgba(255,255,255,0.22) 0%,
+        transparent 30%,
+        transparent 60%,
+        rgba(255,255,255,0.08) 100%
       );
       pointer-events: none;
       z-index: 4;
     }
 
+    /* Strong visible 3D spin */
     .vinyl.spinning {
-      animation: spin3d 2.8s linear infinite;
+      animation: spin3d 1.8s linear infinite;
     }
 
     @keyframes spin3d {
-      from {
-        transform: rotateY(8deg) rotateZ(0deg);
-      }
-      to {
-        transform: rotateY(8deg) rotateZ(360deg);
-      }
+      0%   { transform: rotateX(18deg) rotateY(-12deg) rotateZ(0deg); }
+      100% { transform: rotateX(18deg) rotateY(-12deg) rotateZ(360deg); }
     }
 
     .music-info {
       display: flex;
       flex-direction: column;
-      gap: 0.12rem;
+      gap: 0.1rem;
       min-width: 0;
     }
     .music-info .label {
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       font-weight: 500;
       letter-spacing: 0.02em;
       white-space: nowrap;
     }
     .music-info .status {
-      font-size: 0.64rem;
-      opacity: 0.65;
+      font-size: 0.65rem;
+      opacity: 0.7;
       letter-spacing: 0.03em;
     }
 
@@ -184,14 +197,14 @@
       padding: 5.8rem 1.5rem 6.8rem;
       text-align: center;
       overflow: hidden;
-      color: #f4faf6;
+      color: #e8f5eb;
     }
     .hero::before {
       content: '';
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(165deg, rgba(26,64,41,0.94) 0%, rgba(35,85,52,0.90) 45%, rgba(45,100,62,0.88) 100%),
+        linear-gradient(165deg, rgba(26,64,41,0.82) 0%, rgba(35,85,52,0.78) 45%, rgba(45,100,62,0.75) 100%),
         url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1600&q=70') center/cover;
       z-index: 0;
     }
@@ -200,7 +213,7 @@
       position: absolute;
       bottom: -1px;
       left: 0; right: 0;
-      height: 90px;
+      height: 100px;
       background: linear-gradient(to top, var(--bg), transparent);
       z-index: 1;
     }
@@ -217,14 +230,15 @@
       font-size: 0.72rem;
       letter-spacing: 0.22em;
       text-transform: uppercase;
-      opacity: 0.88;
+      opacity: 0.9;
       margin-bottom: 1.35rem;
       font-weight: 500;
       padding: 0.38rem 1rem;
-      border: 1px solid rgba(255,255,255,0.28);
+      border: 1px solid rgba(255,255,255,0.3);
       border-radius: 999px;
       backdrop-filter: blur(6px);
       animation: fadeIn 0.8s ease both;
+      color: rgba(255,255,255,0.9);
     }
     .hero h1 {
       font-family: 'Cormorant Garamond', 'Noto Sans SC', serif;
@@ -237,11 +251,12 @@
     }
     .hero .subtitle {
       font-size: 1.05rem;
-      opacity: 0.9;
+      opacity: 0.88;
       font-weight: 300;
       max-width: 420px;
       margin: 0 auto 2rem;
       animation: fadeIn 0.9s ease 0.2s both;
+      color: rgba(255,255,255,0.9);
     }
     .meta {
       display: flex;
@@ -252,21 +267,21 @@
     }
     .meta span {
       font-size: 0.82rem;
-      background: rgba(255,255,255,0.13);
+      background: rgba(255,255,255,0.14);
       padding: 0.42rem 1rem;
       border-radius: 999px;
       backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
       transition: background 0.25s;
+      color: rgba(255,255,255,0.9);
     }
-    .meta span:hover { background: rgba(255,255,255,0.22); }
+    .meta span:hover { background: rgba(255,255,255,0.24); }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ——— Layout ——— */
     .container {
       max-width: 720px;
       margin: 0 auto;
@@ -274,7 +289,6 @@
       position: relative;
     }
 
-    /* ——— Intro Card ——— */
     .intro-card {
       background: var(--card);
       border-radius: var(--radius);
@@ -283,14 +297,13 @@
       box-shadow: var(--shadow);
       position: relative;
       z-index: 5;
-      border: 1px solid rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.65);
       backdrop-filter: blur(20px);
       animation: fadeIn 0.8s ease 0.35s both;
     }
     .intro-card p { color: var(--muted); font-size: 0.98rem; }
     .intro-card strong { color: var(--ink); font-weight: 600; }
 
-    /* ——— Day Navigation ——— */
     .day-nav {
       position: sticky;
       top: 0.9rem;
@@ -299,11 +312,11 @@
       gap: 0.45rem;
       margin: 2.3rem auto 1.3rem;
       padding: 0.4rem;
-      background: rgba(255,255,255,0.78);
+      background: rgba(255, 255, 255, 0.82);
       backdrop-filter: blur(18px);
       border-radius: 999px;
       border: 1px solid var(--line);
-      box-shadow: 0 10px 28px rgba(26,64,41,0.09);
+      box-shadow: 0 10px 28px rgba(26,64,41,0.1);
       width: fit-content;
     }
     .day-nav a {
@@ -315,14 +328,14 @@
       border-radius: 999px;
       transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .day-nav a:hover { color: var(--deep); background: rgba(58,122,78,0.08); }
+    .day-nav a:hover { color: var(--ink); background: rgba(58,122,78,0.08); }
     .day-nav a.active {
       background: var(--accent);
-      color: white;
+      color: #fff;
       box-shadow: 0 4px 14px rgba(58,122,78,0.3);
+      font-weight: 600;
     }
 
-    /* ——— Day Header ——— */
     .day-header {
       margin: 2.9rem 0 1.6rem;
       text-align: center;
@@ -330,7 +343,7 @@
     .day-badge {
       display: inline-block;
       background: var(--accent-soft);
-      color: var(--green);
+      color: var(--accent);
       font-size: 0.72rem;
       font-weight: 600;
       letter-spacing: 0.08em;
@@ -342,11 +355,10 @@
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.8rem;
       font-weight: 600;
-      color: var(--deep);
+      color: var(--ink);
       letter-spacing: -0.01em;
     }
 
-    /* ——— Timeline ——— */
     .timeline {
       position: relative;
       padding-left: 1.75rem;
@@ -360,7 +372,7 @@
       width: 2px;
       background: linear-gradient(to bottom, var(--accent), transparent 92%);
       border-radius: 2px;
-      opacity: 0.45;
+      opacity: 0.5;
     }
 
     .stop {
@@ -394,7 +406,7 @@
       border: 3px solid var(--accent);
       border-radius: 50%;
       z-index: 2;
-      box-shadow: 0 0 0 5px rgba(58,122,78,0.13);
+      box-shadow: 0 0 0 5px rgba(58,122,78,0.12);
       transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
     .stop:hover::before {
@@ -406,8 +418,8 @@
       background: var(--card);
       border-radius: 18px;
       padding: 1.4rem 1.4rem 1.3rem;
-      box-shadow: 0 8px 28px rgba(26,64,41,0.07);
-      border: 1px solid rgba(255,255,255,0.65);
+      box-shadow: 0 8px 28px rgba(26,64,41,0.08);
+      border: 1px solid rgba(255,255,255,0.6);
       backdrop-filter: blur(12px);
       transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
                   box-shadow 0.35s ease;
@@ -415,6 +427,7 @@
     .stop-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 20px 44px rgba(26,64,41,0.14);
+      border-color: rgba(58,122,78,0.25);
     }
 
     .time {
@@ -433,14 +446,14 @@
       height: 6px;
       background: var(--accent);
       border-radius: 50%;
-      opacity: 0.75;
+      opacity: 0.85;
     }
 
     .stop-card h3 {
       font-size: 1.13rem;
       font-weight: 600;
       margin-bottom: 0.48rem;
-      color: var(--deep);
+      color: var(--ink);
       letter-spacing: -0.01em;
     }
     .stop-card p {
@@ -457,7 +470,7 @@
     .tag {
       font-size: 0.68rem;
       background: var(--accent-soft);
-      color: var(--green);
+      color: var(--accent);
       padding: 0.24rem 0.72rem;
       border-radius: 999px;
       font-weight: 500;
@@ -466,38 +479,37 @@
     }
     .tag:hover { transform: scale(1.05); }
     .tag.muted {
-      background: rgba(92,111,98,0.1);
+      background: rgba(90,111,96,0.1);
       color: var(--muted);
     }
 
-    /* ——— Note ——— */
     .note {
-      background: linear-gradient(135deg, rgba(220,238,226,0.75), rgba(255,255,255,0.65));
-      border: 1px solid rgba(58,122,78,0.16);
+      background: linear-gradient(135deg, rgba(220, 238, 226, 0.95), rgba(255, 255, 255, 0.92));
+      border: 1px solid rgba(58, 122, 78, 0.22);
       padding: 1.15rem 1.35rem;
       border-radius: 16px;
       font-size: 0.92rem;
-      color: var(--muted);
+      color: #2a3d30;
       margin: 1.9rem 0;
       backdrop-filter: blur(8px);
+      line-height: 1.7;
     }
-    .note strong { color: var(--deep); }
+    .note strong { color: #1a4029; font-weight: 600; }
 
-    /* ——— Tips ——— */
     .tips {
       margin-top: 3.6rem;
       background: var(--card);
       border-radius: var(--radius);
       padding: 2.1rem 1.8rem;
       box-shadow: var(--shadow);
-      border: 1px solid rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.6);
       backdrop-filter: blur(16px);
     }
     .tips h2 {
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.6rem;
       margin-bottom: 1.2rem;
-      color: var(--deep);
+      color: var(--ink);
       text-align: center;
     }
     .tips ul { list-style: none; }
@@ -506,7 +518,7 @@
       padding: 0.58rem 0 0.58rem 1.55rem;
       font-size: 0.93rem;
       color: var(--muted);
-      border-bottom: 1px solid rgba(58,122,78,0.08);
+      border-bottom: 1px solid rgba(58,122,78,0.1);
       transition: color 0.2s;
     }
     .tips li:hover { color: var(--ink); }
@@ -520,45 +532,49 @@
       height: 7px;
       background: var(--accent);
       border-radius: 50%;
-      opacity: 0.7;
+      opacity: 0.8;
     }
 
-    /* ——— Footer ——— */
     .footer {
       text-align: center;
-      padding: 2.6rem 1.5rem 5rem;
+      padding: 2.6rem 1.5rem 5.5rem;
       font-size: 0.85rem;
       color: var(--muted);
     }
-    .footer p + p { margin-top: 0.35rem; opacity: 0.8; }
+    .footer p + p { margin-top: 0.35rem; opacity: 0.75; }
 
-    /* ——— Responsive ——— */
     @media (max-width: 540px) {
       .hero { padding: 4.4rem 1.2rem 5.4rem; }
       .intro-card { padding: 1.55rem 1.3rem; margin-top: -2.8rem; }
       .day-nav { margin-top: 1.9rem; }
-      .music-player { bottom: 1.1rem; right: 1.1rem; padding: 0.45rem 1rem 0.45rem 0.45rem; }
-      .vinyl-wrap, .vinyl { width: 44px; height: 44px; }
+      .music-dock { bottom: 1rem; right: 1rem; }
+      .vinyl-wrap, .vinyl { width: 48px; height: 48px; }
       .stop-card { padding: 1.25rem; }
     }
   </style>
 </head>
 <body>
-  <!-- Vinyl Music Player -->
-  <div class="music-player" id="musicPlayer" title="点击播放 / 暂停">
-    <div class="vinyl-wrap">
-      <div class="vinyl" id="vinyl">
-        <div class="vinyl-shine"></div>
+  <div class="music-dock">
+    <div class="visualizer" id="visualizer">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span>
+    </div>
+    <div class="music-player" id="musicPlayer" title="点击播放 / 暂停">
+      <div class="vinyl-wrap">
+        <div class="vinyl" id="vinyl">
+          <div class="vinyl-shine"></div>
+        </div>
+      </div>
+      <div class="music-info">
+        <span class="label">Kluang Weekend Ride</span>
+        <span class="status" id="musicStatus">Tap to play</span>
       </div>
     </div>
-    <div class="music-info">
-      <span class="label">Dreams · Fleetwood Mac</span>
-      <span class="status" id="musicStatus">Playing</span>
-    </div>
   </div>
-  <audio id="bgMusic" loop>
-    <!-- Soft atmospheric English track (free / suitable for ambient use) -->
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2c8d4c8c0b.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
+
+  <audio id="bgMusic" loop preload="auto" crossorigin="anonymous">
+    <source src="kluang-weekend-ride.mp3" type="audio/mpeg">
   </audio>
 
   <header class="hero">
@@ -589,7 +605,6 @@
       <a href="#day2">Day 2 · 周一</a>
     </nav>
 
-    <!-- DAY 1 -->
     <section id="day1">
       <div class="day-header">
         <div class="day-badge">DAY 1 · 8月23日 星期日</div>
@@ -696,7 +711,6 @@
       </div>
     </section>
 
-    <!-- DAY 2 -->
     <section id="day2">
       <div class="day-header">
         <div class="day-badge">DAY 2 · 8月24日 星期一</div>
@@ -779,58 +793,99 @@
     const vinyl = document.getElementById('vinyl');
     const player = document.getElementById('musicPlayer');
     const status = document.getElementById('musicStatus');
-    let playing = false;
+    const visualizer = document.getElementById('visualizer');
+    const bars = visualizer.querySelectorAll('span');
 
-    // Try autoplay (browsers often block until user interaction)
-    const tryPlay = () => {
+    let playing = false;
+    let audioCtx = null;
+    let analyser = null;
+    let sourceNode = null;
+    let dataArray = null;
+    let rafId = null;
+
+    function setupWebAudio() {
+      if (audioCtx) return;
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 64;
+        analyser.smoothingTimeConstant = 0.75;
+        sourceNode = audioCtx.createMediaElementSource(audio);
+        sourceNode.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+      } catch (e) {
+        console.warn('Web Audio setup failed', e);
+      }
+    }
+
+    function drawVisualizer() {
+      if (!analyser || !playing) {
+        bars.forEach(b => b.style.height = '4px');
+        return;
+      }
+      analyser.getByteFrequencyData(dataArray);
+      const step = Math.floor(dataArray.length / bars.length);
+      bars.forEach((bar, i) => {
+        const value = dataArray[i * step] || 0;
+        const h = Math.max(4, Math.round((value / 255) * 26));
+        bar.style.height = h + 'px';
+      });
+      rafId = requestAnimationFrame(drawVisualizer);
+    }
+
+    function startPlay() {
+      setupWebAudio();
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
       audio.play().then(() => {
         playing = true;
         vinyl.classList.add('spinning');
+        player.classList.add('playing');
+        visualizer.classList.add('active');
         status.textContent = 'Playing';
-      }).catch(() => {
-        playing = false;
-        vinyl.classList.remove('spinning');
-        status.textContent = 'Tap to play';
+        if (rafId) cancelAnimationFrame(rafId);
+        drawVisualizer();
+      }).catch(err => {
+        console.warn('Play failed', err);
+        status.textContent = 'Tap again to play';
       });
-    };
+    }
 
-    tryPlay();
+    function pausePlay() {
+      audio.pause();
+      playing = false;
+      vinyl.classList.remove('spinning');
+      player.classList.remove('playing');
+      visualizer.classList.remove('active');
+      status.textContent = 'Paused';
+      if (rafId) cancelAnimationFrame(rafId);
+      bars.forEach(b => b.style.height = '4px');
+    }
 
     player.addEventListener('click', () => {
-      if (playing) {
-        audio.pause();
-        vinyl.classList.remove('spinning');
-        status.textContent = 'Paused';
-        playing = false;
-      } else {
-        audio.play().then(() => {
-          vinyl.classList.add('spinning');
-          status.textContent = 'Playing';
-          playing = true;
-        }).catch(() => {});
-      }
+      if (playing) pausePlay();
+      else startPlay();
     });
 
-    audio.addEventListener('play', () => {
-      vinyl.classList.add('spinning');
-      status.textContent = 'Playing';
-      playing = true;
-    });
-    audio.addEventListener('pause', () => {
-      vinyl.classList.remove('spinning');
-      status.textContent = 'Paused';
-      playing = false;
+    audio.addEventListener('ended', () => {
+      // loop is on, but just in case
+      if (!audio.loop) pausePlay();
     });
 
-    // Day nav active state
+    audio.addEventListener('error', () => {
+      status.textContent = 'Audio load error';
+      console.error('Audio error', audio.error);
+    });
+
+    // Day nav
     const navLinks = document.querySelectorAll('.day-nav a');
     const sections = document.querySelectorAll('section[id]');
-
     window.addEventListener('scroll', () => {
       let current = '';
       sections.forEach(section => {
-        const sectionTop = section.offsetTop - 130;
-        if (scrollY >= sectionTop) current = section.getAttribute('id');
+        if (scrollY >= section.offsetTop - 130) current = section.getAttribute('id');
       });
       navLinks.forEach(link => {
         link.classList.remove('active');

@@ -23,7 +23,6 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -42,46 +41,147 @@
       min-height: 100vh;
     }
 
-    /* ——— Music Player ——— */
-    .music-bar {
+    /* ——— Vinyl Music Player (3D) ——— */
+    .music-player {
       position: fixed;
-      bottom: 1.4rem;
-      right: 1.4rem;
+      bottom: 1.5rem;
+      right: 1.5rem;
       z-index: 200;
-      background: rgba(26, 64, 41, 0.88);
-      color: #f0f7f2;
-      border-radius: 999px;
-      padding: 0.65rem 1.15rem 0.65rem 0.9rem;
       display: flex;
       align-items: center;
-      gap: 0.65rem;
-      font-size: 0.8rem;
-      letter-spacing: 0.02em;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.22);
-      backdrop-filter: blur(16px);
+      gap: 0.9rem;
+      background: rgba(26, 64, 41, 0.92);
+      color: #f0f7f2;
+      border-radius: 999px;
+      padding: 0.55rem 1.25rem 0.55rem 0.55rem;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.3);
+      backdrop-filter: blur(18px);
       border: 1px solid rgba(255,255,255,0.12);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-    .music-bar:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(0,0,0,0.28); }
-    .music-bar button {
-      background: rgba(255,255,255,0.12);
-      border: none;
-      color: inherit;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      font-size: 0.75rem;
-      transition: background 0.2s;
+      user-select: none;
+      perspective: 600px;
     }
-    .music-bar button:hover { background: rgba(255,255,255,0.22); }
+    .music-player:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 48px rgba(0,0,0,0.35);
+    }
+
+    .vinyl-wrap {
+      width: 52px;
+      height: 52px;
+      position: relative;
+      flex-shrink: 0;
+      transform-style: preserve-3d;
+    }
+
+    .vinyl {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      position: relative;
+      transform-style: preserve-3d;
+      background:
+        /* outer rim */
+        radial-gradient(circle at 50% 50%,
+          transparent 0%,
+          transparent 46%,
+          rgba(255,255,255,0.04) 47%,
+          transparent 48%,
+          transparent 100%
+        ),
+        /* grooves */
+        repeating-radial-gradient(
+          circle at 50% 50%,
+          #0a0a0a 0px,
+          #0a0a0a 1.2px,
+          #161616 1.2px,
+          #161616 2.4px
+        );
+      box-shadow:
+        inset 0 0 0 1.5px rgba(255,255,255,0.07),
+        inset 0 0 12px rgba(0,0,0,0.6),
+        0 0 0 2px #0d0d0d,
+        0 6px 16px rgba(0,0,0,0.45);
+    }
+
+    /* center label */
+    .vinyl::before {
+      content: '';
+      position: absolute;
+      inset: 29%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,0.25), transparent 50%),
+        linear-gradient(145deg, #d4a84b 0%, #b8860b 40%, #8b6914 100%);
+      box-shadow:
+        inset 0 1px 2px rgba(255,255,255,0.4),
+        0 0 0 1px rgba(0,0,0,0.3);
+      z-index: 2;
+    }
+
+    /* spindle hole */
+    .vinyl::after {
+      content: '';
+      position: absolute;
+      inset: 43%;
+      border-radius: 50%;
+      background: #0a0a0a;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.8);
+      z-index: 3;
+    }
+
+    /* highlight shine */
+    .vinyl-shine {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: linear-gradient(
+        125deg,
+        rgba(255,255,255,0.18) 0%,
+        transparent 28%,
+        transparent 55%,
+        rgba(255,255,255,0.06) 100%
+      );
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .vinyl.spinning {
+      animation: spin3d 2.8s linear infinite;
+    }
+
+    @keyframes spin3d {
+      from {
+        transform: rotateY(8deg) rotateZ(0deg);
+      }
+      to {
+        transform: rotateY(8deg) rotateZ(360deg);
+      }
+    }
+
+    .music-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+      min-width: 0;
+    }
+    .music-info .label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .music-info .status {
+      font-size: 0.64rem;
+      opacity: 0.65;
+      letter-spacing: 0.03em;
+    }
 
     /* ——— Hero ——— */
     .hero {
       position: relative;
-      padding: 5.5rem 1.5rem 6.5rem;
+      padding: 5.8rem 1.5rem 6.8rem;
       text-align: center;
       overflow: hidden;
       color: #f4faf6;
@@ -100,7 +200,7 @@
       position: absolute;
       bottom: -1px;
       left: 0; right: 0;
-      height: 80px;
+      height: 90px;
       background: linear-gradient(to top, var(--bg), transparent);
       z-index: 1;
     }
@@ -117,42 +217,53 @@
       font-size: 0.72rem;
       letter-spacing: 0.22em;
       text-transform: uppercase;
-      opacity: 0.85;
-      margin-bottom: 1.25rem;
+      opacity: 0.88;
+      margin-bottom: 1.35rem;
       font-weight: 500;
-      padding: 0.35rem 0.9rem;
-      border: 1px solid rgba(255,255,255,0.25);
+      padding: 0.38rem 1rem;
+      border: 1px solid rgba(255,255,255,0.28);
       border-radius: 999px;
-      backdrop-filter: blur(4px);
+      backdrop-filter: blur(6px);
+      animation: fadeIn 0.8s ease both;
     }
     .hero h1 {
       font-family: 'Cormorant Garamond', 'Noto Sans SC', serif;
-      font-size: clamp(2.4rem, 6.5vw, 3.6rem);
+      font-size: clamp(2.5rem, 6.8vw, 3.7rem);
       font-weight: 600;
-      line-height: 1.2;
-      margin-bottom: 0.9rem;
-      letter-spacing: -0.01em;
+      line-height: 1.18;
+      margin-bottom: 1rem;
+      letter-spacing: -0.015em;
+      animation: fadeIn 0.9s ease 0.1s both;
     }
     .hero .subtitle {
       font-size: 1.05rem;
       opacity: 0.9;
       font-weight: 300;
       max-width: 420px;
-      margin: 0 auto 1.8rem;
+      margin: 0 auto 2rem;
+      animation: fadeIn 0.9s ease 0.2s both;
     }
     .meta {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 0.6rem;
+      animation: fadeIn 0.9s ease 0.3s both;
     }
     .meta span {
       font-size: 0.82rem;
-      background: rgba(255,255,255,0.12);
-      padding: 0.4rem 0.95rem;
+      background: rgba(255,255,255,0.13);
+      padding: 0.42rem 1rem;
       border-radius: 999px;
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: background 0.25s;
+    }
+    .meta span:hover { background: rgba(255,255,255,0.22); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* ——— Layout ——— */
@@ -167,59 +278,53 @@
     .intro-card {
       background: var(--card);
       border-radius: var(--radius);
-      padding: 1.85rem 1.6rem;
-      margin-top: -3.2rem;
+      padding: 1.9rem 1.65rem;
+      margin-top: -3.4rem;
       box-shadow: var(--shadow);
       position: relative;
       z-index: 5;
       border: 1px solid rgba(255,255,255,0.7);
       backdrop-filter: blur(20px);
+      animation: fadeIn 0.8s ease 0.35s both;
     }
-    .intro-card p {
-      color: var(--muted);
-      font-size: 0.98rem;
-    }
-    .intro-card strong {
-      color: var(--ink);
-      font-weight: 600;
-    }
+    .intro-card p { color: var(--muted); font-size: 0.98rem; }
+    .intro-card strong { color: var(--ink); font-weight: 600; }
 
-    /* ——— Day Navigation (sticky) ——— */
+    /* ——— Day Navigation ——— */
     .day-nav {
       position: sticky;
-      top: 0.8rem;
+      top: 0.9rem;
       z-index: 50;
       display: flex;
-      gap: 0.5rem;
-      margin: 2.2rem 0 1.2rem;
+      gap: 0.45rem;
+      margin: 2.3rem auto 1.3rem;
       padding: 0.4rem;
-      background: rgba(255,255,255,0.75);
-      backdrop-filter: blur(16px);
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(18px);
       border-radius: 999px;
       border: 1px solid var(--line);
-      box-shadow: 0 8px 24px rgba(26,64,41,0.08);
+      box-shadow: 0 10px 28px rgba(26,64,41,0.09);
       width: fit-content;
-      margin-left: auto;
-      margin-right: auto;
     }
     .day-nav a {
       text-decoration: none;
       color: var(--muted);
       font-size: 0.82rem;
       font-weight: 500;
-      padding: 0.5rem 1.15rem;
+      padding: 0.52rem 1.2rem;
       border-radius: 999px;
-      transition: all 0.25s ease;
+      transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .day-nav a:hover,
+    .day-nav a:hover { color: var(--deep); background: rgba(58,122,78,0.08); }
     .day-nav a.active {
       background: var(--accent);
       color: white;
+      box-shadow: 0 4px 14px rgba(58,122,78,0.3);
     }
 
     /* ——— Day Header ——— */
     .day-header {
-      margin: 2.8rem 0 1.5rem;
+      margin: 2.9rem 0 1.6rem;
       text-align: center;
     }
     .day-badge {
@@ -229,13 +334,13 @@
       font-size: 0.72rem;
       font-weight: 600;
       letter-spacing: 0.08em;
-      padding: 0.4rem 1rem;
+      padding: 0.42rem 1.05rem;
       border-radius: 999px;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.65rem;
     }
     .day-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.75rem;
+      font-size: 1.8rem;
       font-weight: 600;
       color: var(--deep);
       letter-spacing: -0.01em;
@@ -244,35 +349,35 @@
     /* ——— Timeline ——— */
     .timeline {
       position: relative;
-      padding-left: 1.7rem;
+      padding-left: 1.75rem;
     }
     .timeline::before {
       content: '';
       position: absolute;
-      left: 0.38rem;
-      top: 0.6rem;
-      bottom: 0.6rem;
+      left: 0.4rem;
+      top: 0.7rem;
+      bottom: 0.7rem;
       width: 2px;
-      background: linear-gradient(to bottom, var(--accent), transparent 95%);
+      background: linear-gradient(to bottom, var(--accent), transparent 92%);
       border-radius: 2px;
-      opacity: 0.5;
+      opacity: 0.45;
     }
 
     .stop {
       position: relative;
-      margin-bottom: 1.4rem;
+      margin-bottom: 1.45rem;
       opacity: 0;
-      transform: translateY(18px);
-      animation: fadeUp 0.55s ease forwards;
+      transform: translateY(20px);
+      animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
-    .stop:nth-child(1) { animation-delay: 0.05s; }
-    .stop:nth-child(2) { animation-delay: 0.12s; }
-    .stop:nth-child(3) { animation-delay: 0.19s; }
-    .stop:nth-child(4) { animation-delay: 0.26s; }
-    .stop:nth-child(5) { animation-delay: 0.33s; }
-    .stop:nth-child(6) { animation-delay: 0.40s; }
-    .stop:nth-child(7) { animation-delay: 0.47s; }
-    .stop:nth-child(8) { animation-delay: 0.54s; }
+    .stop:nth-child(1) { animation-delay: 0.06s; }
+    .stop:nth-child(2) { animation-delay: 0.13s; }
+    .stop:nth-child(3) { animation-delay: 0.20s; }
+    .stop:nth-child(4) { animation-delay: 0.27s; }
+    .stop:nth-child(5) { animation-delay: 0.34s; }
+    .stop:nth-child(6) { animation-delay: 0.41s; }
+    .stop:nth-child(7) { animation-delay: 0.48s; }
+    .stop:nth-child(8) { animation-delay: 0.55s; }
 
     @keyframes fadeUp {
       to { opacity: 1; transform: translateY(0); }
@@ -281,30 +386,35 @@
     .stop::before {
       content: '';
       position: absolute;
-      left: -1.58rem;
-      top: 1.35rem;
-      width: 12px;
-      height: 12px;
+      left: -1.62rem;
+      top: 1.4rem;
+      width: 13px;
+      height: 13px;
       background: #fff;
       border: 3px solid var(--accent);
       border-radius: 50%;
       z-index: 2;
-      box-shadow: 0 0 0 4px rgba(58,122,78,0.12);
+      box-shadow: 0 0 0 5px rgba(58,122,78,0.13);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .stop:hover::before {
+      transform: scale(1.15);
+      box-shadow: 0 0 0 7px rgba(58,122,78,0.18);
     }
 
     .stop-card {
       background: var(--card);
       border-radius: 18px;
-      padding: 1.35rem 1.35rem 1.25rem;
+      padding: 1.4rem 1.4rem 1.3rem;
       box-shadow: 0 8px 28px rgba(26,64,41,0.07);
       border: 1px solid rgba(255,255,255,0.65);
       backdrop-filter: blur(12px);
-      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-                  box-shadow 0.3s ease;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.35s ease;
     }
     .stop-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 18px 40px rgba(26,64,41,0.13);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 44px rgba(26,64,41,0.14);
     }
 
     .time {
@@ -312,10 +422,10 @@
       font-weight: 600;
       color: var(--accent);
       letter-spacing: 0.04em;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.38rem;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.45rem;
     }
     .time::before {
       content: '';
@@ -323,20 +433,20 @@
       height: 6px;
       background: var(--accent);
       border-radius: 50%;
-      opacity: 0.7;
+      opacity: 0.75;
     }
 
     .stop-card h3 {
-      font-size: 1.12rem;
+      font-size: 1.13rem;
       font-weight: 600;
-      margin-bottom: 0.45rem;
+      margin-bottom: 0.48rem;
       color: var(--deep);
       letter-spacing: -0.01em;
     }
     .stop-card p {
       font-size: 0.93rem;
       color: var(--muted);
-      margin-bottom: 0.7rem;
+      margin-bottom: 0.75rem;
     }
 
     .tags {
@@ -348,11 +458,13 @@
       font-size: 0.68rem;
       background: var(--accent-soft);
       color: var(--green);
-      padding: 0.22rem 0.7rem;
+      padding: 0.24rem 0.72rem;
       border-radius: 999px;
       font-weight: 500;
       letter-spacing: 0.01em;
+      transition: transform 0.2s;
     }
+    .tag:hover { transform: scale(1.05); }
     .tag.muted {
       background: rgba(92,111,98,0.1);
       color: var(--muted);
@@ -360,48 +472,50 @@
 
     /* ——— Note ——— */
     .note {
-      background: linear-gradient(135deg, rgba(220,238,226,0.7), rgba(255,255,255,0.6));
-      border: 1px solid rgba(58,122,78,0.15);
-      padding: 1.1rem 1.3rem;
+      background: linear-gradient(135deg, rgba(220,238,226,0.75), rgba(255,255,255,0.65));
+      border: 1px solid rgba(58,122,78,0.16);
+      padding: 1.15rem 1.35rem;
       border-radius: 16px;
       font-size: 0.92rem;
       color: var(--muted);
-      margin: 1.8rem 0;
+      margin: 1.9rem 0;
       backdrop-filter: blur(8px);
     }
     .note strong { color: var(--deep); }
 
     /* ——— Tips ——— */
     .tips {
-      margin-top: 3.5rem;
+      margin-top: 3.6rem;
       background: var(--card);
       border-radius: var(--radius);
-      padding: 2rem 1.7rem;
+      padding: 2.1rem 1.8rem;
       box-shadow: var(--shadow);
       border: 1px solid rgba(255,255,255,0.7);
       backdrop-filter: blur(16px);
     }
     .tips h2 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.55rem;
-      margin-bottom: 1.15rem;
+      font-size: 1.6rem;
+      margin-bottom: 1.2rem;
       color: var(--deep);
       text-align: center;
     }
     .tips ul { list-style: none; }
     .tips li {
       position: relative;
-      padding: 0.55rem 0 0.55rem 1.5rem;
+      padding: 0.58rem 0 0.58rem 1.55rem;
       font-size: 0.93rem;
       color: var(--muted);
       border-bottom: 1px solid rgba(58,122,78,0.08);
+      transition: color 0.2s;
     }
+    .tips li:hover { color: var(--ink); }
     .tips li:last-child { border-bottom: none; }
     .tips li::before {
       content: '';
       position: absolute;
       left: 0.15rem;
-      top: 1.05rem;
+      top: 1.1rem;
       width: 7px;
       height: 7px;
       background: var(--accent);
@@ -412,29 +526,39 @@
     /* ——— Footer ——— */
     .footer {
       text-align: center;
-      padding: 2.5rem 1.5rem 4.5rem;
+      padding: 2.6rem 1.5rem 5rem;
       font-size: 0.85rem;
       color: var(--muted);
     }
-    .footer p + p { margin-top: 0.3rem; opacity: 0.8; }
+    .footer p + p { margin-top: 0.35rem; opacity: 0.8; }
 
     /* ——— Responsive ——— */
     @media (max-width: 540px) {
-      .hero { padding: 4.2rem 1.2rem 5.2rem; }
-      .intro-card { padding: 1.5rem 1.25rem; margin-top: -2.6rem; }
-      .day-nav { margin-top: 1.8rem; }
-      .music-bar { bottom: 1rem; right: 1rem; font-size: 0.75rem; }
-      .stop-card { padding: 1.2rem; }
+      .hero { padding: 4.4rem 1.2rem 5.4rem; }
+      .intro-card { padding: 1.55rem 1.3rem; margin-top: -2.8rem; }
+      .day-nav { margin-top: 1.9rem; }
+      .music-player { bottom: 1.1rem; right: 1.1rem; padding: 0.45rem 1rem 0.45rem 0.45rem; }
+      .vinyl-wrap, .vinyl { width: 44px; height: 44px; }
+      .stop-card { padding: 1.25rem; }
     }
   </style>
 </head>
 <body>
-  <div class="music-bar">
-    <button id="musicToggle" aria-label="播放/暂停">❚❚</button>
-    <span>Chill Ambient</span>
+  <!-- Vinyl Music Player -->
+  <div class="music-player" id="musicPlayer" title="点击播放 / 暂停">
+    <div class="vinyl-wrap">
+      <div class="vinyl" id="vinyl">
+        <div class="vinyl-shine"></div>
+      </div>
+    </div>
+    <div class="music-info">
+      <span class="label">Dreams · Fleetwood Mac</span>
+      <span class="status" id="musicStatus">Playing</span>
+    </div>
   </div>
-  <audio id="bgMusic" loop autoplay>
-    <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=relaxing-145038.mp3" type="audio/mpeg">
+  <audio id="bgMusic" loop>
+    <!-- Soft atmospheric English track (free / suitable for ambient use) -->
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2c8d4c8c0b.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
   </audio>
 
   <header class="hero">
@@ -641,7 +765,6 @@
         <li>壁画街禁止车辆，适合慢慢拍，感受老城美好。</li>
         <li>大钟楼在 Taman Tasik MPK，晚上灯光柔和，适合散步。</li>
         <li>Bonbon Hotel 位置好，回酒店、去吃宵夜都很方便。</li>
-        <li>页面有自动播放的轻音乐，右下角可手动暂停/播放。</li>
       </ul>
     </div>
   </div>
@@ -653,23 +776,50 @@
 
   <script>
     const audio = document.getElementById('bgMusic');
-    const btn = document.getElementById('musicToggle');
-    let playing = true;
+    const vinyl = document.getElementById('vinyl');
+    const player = document.getElementById('musicPlayer');
+    const status = document.getElementById('musicStatus');
+    let playing = false;
 
-    audio.play().catch(() => {
-      playing = false;
-      btn.textContent = '▶';
-    });
+    // Try autoplay (browsers often block until user interaction)
+    const tryPlay = () => {
+      audio.play().then(() => {
+        playing = true;
+        vinyl.classList.add('spinning');
+        status.textContent = 'Playing';
+      }).catch(() => {
+        playing = false;
+        vinyl.classList.remove('spinning');
+        status.textContent = 'Tap to play';
+      });
+    };
 
-    btn.addEventListener('click', () => {
+    tryPlay();
+
+    player.addEventListener('click', () => {
       if (playing) {
         audio.pause();
-        btn.textContent = '▶';
+        vinyl.classList.remove('spinning');
+        status.textContent = 'Paused';
+        playing = false;
       } else {
-        audio.play().catch(() => {});
-        btn.textContent = '❚❚';
+        audio.play().then(() => {
+          vinyl.classList.add('spinning');
+          status.textContent = 'Playing';
+          playing = true;
+        }).catch(() => {});
       }
-      playing = !playing;
+    });
+
+    audio.addEventListener('play', () => {
+      vinyl.classList.add('spinning');
+      status.textContent = 'Playing';
+      playing = true;
+    });
+    audio.addEventListener('pause', () => {
+      vinyl.classList.remove('spinning');
+      status.textContent = 'Paused';
+      playing = false;
     });
 
     // Day nav active state
@@ -679,7 +829,7 @@
     window.addEventListener('scroll', () => {
       let current = '';
       sections.forEach(section => {
-        const sectionTop = section.offsetTop - 120;
+        const sectionTop = section.offsetTop - 130;
         if (scrollY >= sectionTop) current = section.getAttribute('id');
       });
       navLinks.forEach(link => {

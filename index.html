@@ -573,7 +573,7 @@
     </div>
   </div>
 
-  <audio id="bgMusic" loop preload="auto" crossorigin="anonymous">
+  <audio id="bgMusic" loop preload="auto">
     <source src="kluang-weekend-ride.mp3" type="audio/mpeg">
   </audio>
 
@@ -797,71 +797,71 @@
     const bars = visualizer.querySelectorAll('span');
 
     let playing = false;
-    let audioCtx = null;
-    let analyser = null;
-    let sourceNode = null;
-    let dataArray = null;
     let rafId = null;
 
-    function setupWebAudio() {
-      if (audioCtx) return;
-      try {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 64;
-        analyser.smoothingTimeConstant = 0.75;
-        sourceNode = audioCtx.createMediaElementSource(audio);
-        sourceNode.connect(analyser);
-        analyser.connect(audioCtx.destination);
-        dataArray = new Uint8Array(analyser.frequencyBinCount);
-      } catch (e) {
-        console.warn('Web Audio setup failed', e);
-      }
-    }
+    // Ensure audible
+    audio.volume = 1.0;
+    audio.muted = false;
 
-    function drawVisualizer() {
-      if (!analyser || !playing) {
-        bars.forEach(b => b.style.height = '4px');
-        return;
-      }
-      analyser.getByteFrequencyData(dataArray);
-      const step = Math.floor(dataArray.length / bars.length);
-      bars.forEach((bar, i) => {
-        const value = dataArray[i * step] || 0;
-        const h = Math.max(4, Math.round((value / 255) * 26));
-        bar.style.height = h + 'px';
-      });
-      rafId = requestAnimationFrame(drawVisualizer);
-    }
-
-    function startPlay() {
-      setupWebAudio();
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      audio.play().then(() => {
-        playing = true;
+    function setPlayingUI(on) {
+      playing = on;
+      if (on) {
         vinyl.classList.add('spinning');
         player.classList.add('playing');
         visualizer.classList.add('active');
         status.textContent = 'Playing';
-        if (rafId) cancelAnimationFrame(rafId);
-        drawVisualizer();
-      }).catch(err => {
-        console.warn('Play failed', err);
-        status.textContent = 'Tap again to play';
-      });
+        startBars();
+      } else {
+        vinyl.classList.remove('spinning');
+        player.classList.remove('playing');
+        visualizer.classList.remove('active');
+        status.textContent = 'Paused';
+        stopBars();
+      }
+    }
+
+    function startBars() {
+      stopBars();
+      function tick() {
+        if (!playing) return;
+        bars.forEach((bar, i) => {
+          const t = Date.now() / 180 + i * 0.55;
+          const wave = Math.abs(Math.sin(t)) * 0.7 + Math.abs(Math.sin(t * 1.7 + i)) * 0.3;
+          const h = 4 + wave * (12 + (i % 5) * 2.5);
+          bar.style.height = h + 'px';
+        });
+        rafId = requestAnimationFrame(tick);
+      }
+      tick();
+    }
+
+    function stopBars() {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+      bars.forEach(b => { b.style.height = '4px'; });
+    }
+
+    function startPlay() {
+      audio.muted = false;
+      audio.volume = 1.0;
+
+      const p = audio.play();
+      if (p !== undefined) {
+        p.then(() => {
+          setPlayingUI(true);
+        }).catch(err => {
+          console.error('play error', err);
+          status.textContent = '请再点一次';
+          setPlayingUI(false);
+        });
+      } else {
+        setPlayingUI(true);
+      }
     }
 
     function pausePlay() {
       audio.pause();
-      playing = false;
-      vinyl.classList.remove('spinning');
-      player.classList.remove('playing');
-      visualizer.classList.remove('active');
-      status.textContent = 'Paused';
-      if (rafId) cancelAnimationFrame(rafId);
-      bars.forEach(b => b.style.height = '4px');
+      setPlayingUI(false);
     }
 
     player.addEventListener('click', () => {
@@ -869,14 +869,15 @@
       else startPlay();
     });
 
-    audio.addEventListener('ended', () => {
-      // loop is on, but just in case
-      if (!audio.loop) pausePlay();
+    // Keep UI in sync if audio ends / pauses externally
+    audio.addEventListener('play', () => setPlayingUI(true));
+    audio.addEventListener('pause', () => {
+      if (!audio.ended) setPlayingUI(false);
     });
-
     audio.addEventListener('error', () => {
-      status.textContent = 'Audio load error';
-      console.error('Audio error', audio.error);
+      console.error('audio error', audio.error);
+      status.textContent = '找不到音乐文件';
+      setPlayingUI(false);
     });
 
     // Day nav
